@@ -67,7 +67,7 @@ int main(int argc, char *argv[])
 			int peername = getpeername(newSD, (sockaddr *) &clientAddr, &addrLen);            
 			char *c_addripv4 = inet_ntoa(clientAddr.sin_addr);
 			in_addr_t c_internet_addr = inet_addr(c_addripv4);
-			struct hostent *hptr = gethostbyaddr(&c_internet_addr, sizeof(c_internet_addr), AF_INET);
+			struct hostent *hptr = gethostbyaddr(c_internet_addr, sizeof(c_internet_addr), AF_INET);
 			
 			cout << "official hostname " << hptr->h_name << endl;
 
