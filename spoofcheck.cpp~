@@ -104,7 +104,7 @@ int main(int argc, char *argv[])
 
 						cout << "socket ip: " << socketAddr << endl;
 						cout << "ip address: " << reg_ip;
-						if (strcmp(socketAddr, reg_ip))
+						if (strcmp(socketAddr, reg_ip) == 0)
 						{
 							cout << " ... hit!";
 							trustedClient = true;
