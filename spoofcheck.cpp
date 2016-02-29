@@ -101,6 +101,8 @@ int main(int argc, char *argv[])
 					for (int i = 0; (addr = (in_addr *)dnsPtr->h_addr_list[i]) != NULL; i++)
 					{
 						char *reg_ip = inet_ntoa(*addr);
+
+						cout << "socket ip: " << socketAddr << endl;
 						cout << "ip address: " << reg_ip;
 						if (strcmp(socketAddr, reg_ip))
 						{
