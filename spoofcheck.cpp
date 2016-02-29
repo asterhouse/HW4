@@ -107,6 +107,10 @@ int main(int argc, char *argv[])
 							cout << " ... hit!";
 							trustedClient = true;
 						}
+						else
+						{
+							cout << " ... no hit!";
+						}
 						cout << endl;
 					}
 					break;
