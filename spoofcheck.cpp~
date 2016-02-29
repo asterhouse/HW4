@@ -73,14 +73,14 @@ int main(int argc, char *argv[])
 			//possibly spoofed addr to verify.
 			char *socketAddr = inet_ntoa(clientAddr.sin_addr);
 
-			struct hostent *dnsPtr = gethostbyaddr(&cSocketAddr, sizeof(cSocketAddr), AF_INET);
+			struct hostent *hostPtr = gethostbyaddr(&cSocketAddr, sizeof(cSocketAddr), AF_INET);
 			
 			//print host name
-			cout << "official hostname: " << dnsPtr->h_name << endl;
+			cout << "official hostname: " << hostPtr->h_name << endl;
 			
 			//print aliases found
 			int nAlias = 0;
-			for (char **alias = dnsPtr->h_aliases; *alias != NULL; alias++)
+			for (char **alias = hostPtr->h_aliases; *alias != NULL; alias++)
 			{
 				cout << "alias: " << *alias << endl;
 				nAlias++;
@@ -92,13 +92,13 @@ int main(int argc, char *argv[])
 			}
 			
 			bool trustedClient = false;
-			switch (dnsPtr->h_addrtype)
+			switch (hostPtr->h_addrtype)
 			{
 				//print all ip addresses found and compare to socket IP
 				case AF_INET:
 
 					in_addr *addr;
-					for (int i = 0; (addr = (in_addr *)dnsPtr->h_addr_list[i]) != NULL; i++)
+					for (int i = 0; (addr = (in_addr *)hostPtr->h_addr_list[i]) != NULL; i++)
 					{
 						char *reg_ip = inet_ntoa(*addr);
 

@@ -1,0 +1,26 @@
+Test 1 from uw1-320-02 to server on uw1-320-05
+
+urickgeo@uw1-320-05:~/HW4$ ./spoofcheck 12215
+client addr = 69.91.198.153 port = 33585
+official hostname: uw1-320-02.uwb.edu
+alias: uw1-320-02
+socket ip: 69.91.198.153
+ip address: 69.91.198.153 ... hit!
+an honest client
+
+Test 2 from local ubuntu box to server on uw1-320-05
+client addr = 10.156.28.36 port = 54449
+official hostname: D-10-156-28-36.dhcp4.washington.edu
+alias: none
+socket ip: 10.156.28.36
+ip address: 10.156.28.36 ... hit!
+an honest client
+
+Test 3 from local windows using putty to server
+client addr = 10.156.31.150 port = 50028
+official hostname: D-10-156-31-150.dhcp4.washington.edu
+alias: none
+socket ip: 10.156.31.150
+ip address: 10.156.31.150 ... hit!
+an honest client
+
