@@ -64,41 +64,54 @@ int main(int argc, char *argv[])
         {
 			sockaddr_in clientAddr;
 			socklen_t addrLen = sizeof(clientAddr);
-			int peername = getpeername(newSD, (sockaddr *) &clientAddr, &addrLen);            
-			char *c_addripv4 = inet_ntoa(clientAddr.sin_addr);
-			in_addr_t c_internet_addr = inet_addr(c_addripv4);
-			struct hostent *hptr = gethostbyaddr(&c_internet_addr, sizeof(c_internet_addr), AF_INET);
+			getpeername(newSD, (sockaddr *) &clientAddr, &addrLen);
+
+			cout << "client addr = " << inet_ntoa(clientAddr.sin_addr);
+			cout << " port = " << ntohs(clientAddr.sin_port) << endl;
 			
-			cout << "official hostname " << hptr->h_name << endl;
+			in_addr_t cSocketAddr = inet_addr(inet_ntoa(clientAddr.sin_addr));
+			struct hostent *dnsPtr = gethostbyaddr(&cSocketAddr, sizeof(cSocketAddr), AF_INET);
+			
+			cout << "official hostname: " << dnsPtr->h_name << endl;
 
-	int nAlias = 0;
-	for (char **alias = hptr->h_aliases; *alias != NULL; alias++)
-	{
-		cout << "alias: " << *alias << endl;
-		nAlias++;
-	}
+			char *socketAddr = inet_ntoa(clientAddr.sin_addr);
 
-	if (nAlias == 0)
-	{
-		cout << " No aliases found " << endl;
-	}
-
-	switch (hptr->h_addrtype)
-	{
-		case AF_INET:
-
-			in_addr *addr;
-			for (int i = 0; (addr = (in_addr *)hptr->h_addr_list[i]) != NULL; i++)
+			int nAlias = 0;
+			for (char **alias = dnsPtr->h_aliases; *alias != NULL; alias++)
 			{
-				char *reg_ip = inet_ntoa(*addr);
-				cout << "IP Address: " << reg_ip << endl;
+				cout << "alias: " << *alias << endl;
+				nAlias++;
 			}
-			break;
-		default:
-			
-			cerr << "unknown address type" << endl;
-			break;
-	}
+
+			if (nAlias == 0)
+			{
+				cout << "alias: none" << endl;
+			}
+
+			bool trustedClient = false;
+			switch (dnsPtr->h_addrtype)
+			{
+				case AF_INET:
+
+					in_addr *addr;
+					for (int i = 0; (addr = (in_addr *)dnsPtr->h_addr_list[i]) != NULL; i++)
+					{
+						char *reg_ip = inet_ntoa(*addr);
+						cout << "ip address: " << reg_ip << " ... hit!" << endl;
+						if (strcmp(socketAddr, reg_ip))
+						{
+							trustedClient = true;
+						}
+					}
+					break;
+				default:
+					cerr << "unknown address type" << endl;
+					break;
+			}
+			if (trustedClient)
+			{
+				cout << "an honest client" << endl;
+			}
 
             close(newSD);
             exit(0);
