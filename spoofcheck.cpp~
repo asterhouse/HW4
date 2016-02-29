@@ -68,29 +68,33 @@ int main(int argc, char *argv[])
 
 			cout << "client addr = " << inet_ntoa(clientAddr.sin_addr);
 			cout << " port = " << ntohs(clientAddr.sin_port) << endl;
-			
+			//unsigned int to pass into gethostbyaddr
 			in_addr_t cSocketAddr = inet_addr(inet_ntoa(clientAddr.sin_addr));
-			struct hostent *dnsPtr = gethostbyaddr(&cSocketAddr, sizeof(cSocketAddr), AF_INET);
-			
-			cout << "official hostname: " << dnsPtr->h_name << endl;
-
+			//possibly spoofed addr to verify.
 			char *socketAddr = inet_ntoa(clientAddr.sin_addr);
 
+			struct hostent *dnsPtr = gethostbyaddr(&cSocketAddr, sizeof(cSocketAddr), AF_INET);
+			
+			//print host name
+			cout << "official hostname: " << dnsPtr->h_name << endl;
+			
+			//print aliases found
 			int nAlias = 0;
 			for (char **alias = dnsPtr->h_aliases; *alias != NULL; alias++)
 			{
 				cout << "alias: " << *alias << endl;
 				nAlias++;
 			}
-
+			//no aliases found
 			if (nAlias == 0)
 			{
 				cout << "alias: none" << endl;
 			}
-
+			
 			bool trustedClient = false;
 			switch (dnsPtr->h_addrtype)
 			{
+				//print all ip addresses found and compare to socket IP
 				case AF_INET:
 
 					in_addr *addr;
@@ -110,9 +114,14 @@ int main(int argc, char *argv[])
 					cerr << "unknown address type" << endl;
 					break;
 			}
+			//print if client is trusted.
 			if (trustedClient)
 			{
 				cout << "an honest client" << endl;
+			}
+			else
+			{
+				cout << "Cannot trust this client" << endl;
 			}
 
             close(newSD);
